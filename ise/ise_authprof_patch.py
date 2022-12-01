@@ -16,7 +16,7 @@ import json
 API_PROTO  = "https"
 ISE_HOST = "10.0.0.1"
 API_PORT = "443"
-RESOURCE = "/ers/config/authorizationprofile"
+RESOURCE = "ers/config/authorizationprofile"
 
 url = f"{API_PROTO}://{ISE_HOST}:{API_PORT}/{RESOURCE}"
 auth = "ers","MySuperPassword"
@@ -49,7 +49,7 @@ def patch_auth_profile(prof_id: str, payload: dict) -> None:
     """ Patch Authorization Profiles by ID in ISE
         with specific payload_patch
     """ 
-    RESOURCE_PATCH = f'/ers/config/authorizationprofile/{prof_id}'
+    RESOURCE_PATCH = f'ers/config/authorizationprofile/{prof_id}'
     url = f"{API_PROTO}://{ISE_HOST}:{API_PORT}/{RESOURCE_PATCH}"
 
     resp_patch = requests.patch(\
@@ -68,8 +68,8 @@ def main():
              }
            }
 
-    for auth_prof in authprof_lst:
-        patch_auth_profile(auth_prof["id"], payload_patch)
+    for indx in len(authprof_lst):
+        patch_auth_profile(authprof_lst[indx]["id"], payload_patch)
 
 if __name__ == "__main__":
     main()
