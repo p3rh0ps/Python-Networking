@@ -25,7 +25,7 @@ headers = {
     'Accept': 'application/json',
 }
     
-def retrieve_auth_profiles(url) -> list:
+def retrieve_auth_profiles(url) -> dict:
     """ Retrieve Authorization Profiles from ISE
     """
     payload_get = {}
@@ -34,7 +34,7 @@ def retrieve_auth_profiles(url) -> list:
     while (url) :
         resp_get = requests.get(\
         url, auth=auth, headers=headers, data=payload_get, verify=False)
-        auth_profiles.append(resp_get.json()["SearchResult"]["resources"])
+        auth_profiles += resp_get.json()["SearchResult"]["resources"])
         try :
             resp_get.raise_for_status()
             url = resp_get.json()["SearchResult"]["nextPage"]["href"]
@@ -57,7 +57,7 @@ def patch_auth_profile(prof_id: str, payload: dict) -> None:
 
 def main():
 
-    authprof_lst = retrieve_auth_profiles(url)
+    authprof_dict = retrieve_auth_profiles(url)
 
     payload_patch = {
            "AuthorizationProfile": {
@@ -68,8 +68,8 @@ def main():
              }
            }
 
-    for indx in len(authprof_lst):
-        patch_auth_profile(authprof_lst[indx]["id"], payload_patch)
+    for key in authprof_dict.keys():
+        patch_auth_profile(authprof_dict[key]["id"], payload_patch)
 
 if __name__ == "__main__":
     main()
