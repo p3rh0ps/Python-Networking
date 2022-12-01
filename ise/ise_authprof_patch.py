@@ -10,6 +10,7 @@ __maintainer__ = "p3rh0ps"
 __email__ = "p3rh0ps@gmail.com"
 __status__ = "prototype"
 
+import json
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 from urllib3 import disable_warnings
@@ -37,6 +38,7 @@ def retrieve_auth_profiles(url) -> list:
         resp_get = requests.get(\
         url, auth=auth, headers=headers, data=payload_get, verify=False)
         auth_profiles += resp_get.json()["SearchResult"]["resources"]
+        print(json.dumps(auth_profiles, indent=4))
         try :
             resp_get.raise_for_status()
             url = resp_get.json()["SearchResult"]["nextPage"]["href"]
