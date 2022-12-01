@@ -5,7 +5,7 @@ __author__ = "p3rh0ps"
 __copyright__ = "Copyright 2022, p3rh0ps"
 __credits__ = ["p3rh0ps"]
 __license__ = "MIT"
-__version__ = "0.90"
+__version__ = "0.91"
 __maintainer__ = "p3rh0ps"
 __email__ = "p3rh0ps@gmail.com"
 __status__ = "prototype"
@@ -25,7 +25,7 @@ headers = {
     'Accept': 'application/json',
 }
     
-def retrieve_auth_profiles(url) -> dict:
+def retrieve_auth_profiles(url) -> list:
     """ Retrieve Authorization Profiles from ISE
     """
     payload_get = {}
@@ -34,7 +34,7 @@ def retrieve_auth_profiles(url) -> dict:
     while (url) :
         resp_get = requests.get(\
         url, auth=auth, headers=headers, data=payload_get, verify=False)
-        auth_profiles += resp_get.json()["SearchResult"]["resources"])
+        auth_profiles += resp_get.json()["SearchResult"]["resources"]
         try :
             resp_get.raise_for_status()
             url = resp_get.json()["SearchResult"]["nextPage"]["href"]
@@ -57,7 +57,7 @@ def patch_auth_profile(prof_id: str, payload: dict) -> None:
 
 def main():
 
-    authprof_dict = retrieve_auth_profiles(url)
+    authprof_lst = retrieve_auth_profiles(url)
 
     payload_patch = {
            "AuthorizationProfile": {
@@ -68,8 +68,8 @@ def main():
              }
            }
 
-    for key in authprof_dict.keys():
-        patch_auth_profile(authprof_dict[key]["id"], payload_patch)
+    for idx in range(0, len(authprof_lst)):
+        patch_auth_profile(authprof_lst[idx]["id"], payload_patch)
 
 if __name__ == "__main__":
     main()
