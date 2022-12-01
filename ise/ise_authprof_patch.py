@@ -11,7 +11,9 @@ __email__ = "p3rh0ps@gmail.com"
 __status__ = "prototype"
 
 import requests
-import json
+from urllib3.exceptions import InsecureRequestWarning
+from urllib3 import disable_warnings
+disable_warnings(InsecureRequestWarning)
 
 API_PROTO  = "https"
 ISE_HOST = "10.0.0.1"
