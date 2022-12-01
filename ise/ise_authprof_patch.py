@@ -47,7 +47,6 @@ def retrieve_auth_profiles(url) -> list:
 
 
 def patch_auth_profile(prof_id: str, payload: dict) -> None:
-    
     """ Patch Authorization Profiles by ID in ISE
         with specific payload_patch
     """ 
@@ -56,6 +55,7 @@ def patch_auth_profile(prof_id: str, payload: dict) -> None:
 
     resp_patch = requests.patch(\
     url, auth=auth, headers=headers, data=payload, verify=False)
+    resp_patch.raise_for_status()
 
 def main():
 
