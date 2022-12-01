@@ -1,0 +1,11 @@
+# WebEx
+
+export TOKEN="<mytoken>"
+
+curl -i https://webexapis.com/v1/messages \
+-X POST -H "Authorization:Bearer $TOKEN" \
+-H "Content-Type: application/json" \
+--data '{"toPersonEmail":"p3rh0ps@gmail.com", "text":"Hi from Me"}'
+
+curl -i --header "Authorization: Bearer $TOKEN" https://webexapis.com/v1/people/me
+

@@ -1,0 +1,13 @@
+# Tell git which branch name is default for newly created repos
+
+git config --global init.defaultBranch main
+
+# Setup
+
+git config --global user.name 'p3rh0ps'
+git config --global user.email 'p3rh0s@gmail.com'
+
+# List global configuration
+git config --list
+
+
