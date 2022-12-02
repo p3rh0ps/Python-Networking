@@ -59,7 +59,6 @@ def retrieve_auth_profile_config(prof_id: str) -> dict:
     
     resp_get_conf_id = requests.get(\
     url, auth=auth, headers=headers, data=json.dumps(payload_get), verify=False)
-    print(json.dumps(resp_get_conf_id.json(), indent=4))
     return resp_get_conf_id.json()
 
 
@@ -84,7 +83,7 @@ def main():
 
     change_to_pass = {
             "reauth" : {
-               "timer" : 10000,
+               "timer" : 65000,
                "connectivity" : "RADIUS_REQUEST"
                }
              }
