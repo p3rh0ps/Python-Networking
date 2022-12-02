@@ -1,7 +1,10 @@
-# WebEx
+"""
+WebEx
+"""
 
+# Send message
+###
 export TOKEN="<mytoken>"
-
 curl -i https://webexapis.com/v1/messages \
 -X POST -H "Authorization:Bearer $TOKEN" \
 -H "Content-Type: application/json" \
@@ -9,3 +12,10 @@ curl -i https://webexapis.com/v1/messages \
 
 curl -i --header "Authorization: Bearer $TOKEN" https://webexapis.com/v1/people/me
 
+"""
+ISE
+"""
+
+# Modify Authorization Profile
+###
+curl -k -X PUT -i --header 'Accept: application/xml' --header 'Content-Type:application/xml' -u ers:MySuperPassword -d data.xml https://64.103.46.211:443/ers/config/authorizationprofile/984b81c0-8c01-11e6-996c-525400b48521
