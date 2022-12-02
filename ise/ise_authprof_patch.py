@@ -72,7 +72,7 @@ def update_auth_profile(method: str, prof_id: str, payload: dict) -> None:
     
     resp = requests.request(\
     method, url, auth=auth, headers=headers, data=json.dumps(payload), verify=False)
-    print("****",resp.status_code,"****")
+    print("****",resp.status_code,"****",resp.url,"****")
     resp.raise_for_status()
 
 
