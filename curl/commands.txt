@@ -18,4 +18,7 @@ ISE
 
 # Modify Authorization Profile
 ###
-curl -k -X PUT -i --header 'Accept: application/xml' --header 'Content-Type:application/xml' -u ers:MySuperPassword -d data.xml https://64.103.46.211:443/ers/config/authorizationprofile/984b81c0-8c01-11e6-996c-525400b48521
+curl -k -X PUT -i --header 'Accept: application/xml' \
+--header 'Content-Type:application/xml' \
+-u ers:MySuperPassword \
+-d data.xml https://64.103.46.211:443/ers/config/authorizationprofile/984b81c0-8c01-11e6-996c-525400b48521
