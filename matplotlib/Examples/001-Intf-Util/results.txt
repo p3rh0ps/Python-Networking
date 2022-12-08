@@ -1,0 +1,9 @@
+{"Time": "2022-12-07T09:34:14", "Gig0-0_Out_uPackets": "4535", "Gig0-0_In_uPackets": "404535",}
+{"Time": "2022-12-07T09:35:14", "Gig0-0_Out_uPackets": "5535", "Gig0-0_In_uPackets": "535"}
+{"Time": "2022-12-07T09:36:14", "Gig0-0_Out_uPackets": "6535", "Gig0-0_In_uPackets": "56535"}
+{"Time": "2022-12-07T09:37:14", "Gig0-0_Out_uPackets": "7535", "Gig0-0_In_uPackets": "97535"}
+{"Time": "2022-12-07T09:38:14", "Gig0-0_Out_uPackets": "10535", "Gig0-0_In_uPackets": "135"}
+{"Time": "2022-12-07T09:39:14", "Gig0-0_Out_uPackets": "3535", "Gig0-0_In_uPackets": "123535"}
+{"Time": "2022-12-07T09:40:14", "Gig0-0_Out_uPackets": "430535", "Gig0-0_In_uPackets": "230535"}
+{"Time": "2022-12-07T09:41:14", "Gig0-0_Out_uPackets": "6645350000", "Gig0-0_In_uPackets": "464530000"}
+{"Time": "2022-12-07T09:42:14", "Gig0-0_Out_uPackets": "94535", "Gig0-0_In_uPackets": "66000"}
