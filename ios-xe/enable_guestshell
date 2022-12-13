@@ -1,0 +1,151 @@
+# ~/.ssh/config
+## KexAlgorithms +diffie-hellman-group14-sha1
+
+# ssh developer@sandbox-iosxe-recomm-1.cisco.com -P C1sco12345
+
+csr1000v-1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+csr1000v-1(config)#iox
+csr1000v-1(config)#end
+
+# 2 mns to start, same as nexus
+
+csr1000v-1#show iox-service
+Virtual Service Global State and Virtualization Limits:
+
+Infrastructure version : 1.7
+Total virtual services installed : 0
+Total virtual services activated : 0
+
+Machine types supported   : LXC
+Machine types disabled    : KVM
+
+Maximum VCPUs per virtual service : 0
+Resource virtualization limits:
+Name                         Quota     Committed     Available  
+--------------------------------------------------------------
+system CPU (%)                   7             0             7  
+memory (MB)                   1024             0          1024  
+bootflash (MB)               20000             0          6701  
+
+IOx Infrastructure Summary:
+---------------------------
+IOx service (CAF)    : Running
+IOx service (HA)     : Not Running
+IOx service (IOxman) : Running
+Libvirtd             : Running
+
+# CAF, IOxman, and Libvirtd services must be running to enable GuestShell successfully.
+
+# To enable communication between Guest Shell container and IOS XE, network settings must be configured.
+# They consist of several parts:
+# - Network settings of the host (IOS XE).
+# - Network settings of the container.
+# - NAT configuration.
+
+# Note: !!! Network configuration is needed on IOS XE router.
+#       !!! IOS XE switches use Management port and don't require additional configuration - you can simply enable IOx and the Guest Shell.
+
+
+# Network Settings of the host
+
+## To enable the communication between IOS XE and the container on the router it is necessary to create a new interface called VirtualPortGroup, which is in the same broadcast domain as the Guest Shell container.
+
+## csr1000v-1#conf t
+## csr1000v-1(config)#interface VirtualPortGroup0
+## csr1000v-1(config-if)#ip address 192.168.1.1 255.255.255.0
+## csr1000v-1(config-if)#end
+
+# Network settings of the container
+
+## The Guest Shell should have an IP address, default gateway and DNS server.
+## It can be configured using the following command from IOS XE privileged EXEC mode:
+
+## csr1000v-1# conf t
+## csr1000v-1(config)# app-hosting appid guestshell
+## csr1000v-1(config-app-hosting)# vnic gateway1 virtualportgroup 0 guest-interface 0 guest-ipaddress 192.168.1.2 netmask 255.255.255.0 gateway 192.168.1.1 name-server 8.8.8.8
+## csr1000v-1(config-app-hosting)# end
+
+# NAT configuration of the host
+
+## If an access from the container to the outside world is required, NAT configuration is required on the router.
+## To do that, the following configuration should be applied:
+
+## csr1000v-1# conf t
+## csr1000v-1(config)# interface VirtualPortGroup0
+## csr1000v-1(config-if)# ip nat inside
+## csr1000v-1(config-if)# exit
+
+## csr1000v-1(config)# interface GigabitEthernet1
+## csr1000v-1(config-if)# ip nat outside
+## csr1000v-1(config-if)# exit
+
+## csr1000v-1(config)# ip access-list extended NAT-ACL
+## csr1000v-1(config-ext-nacl)# permit ip 192.168.1.0 0.0.0.255 any
+
+## csr1000v-1(config)# ip nat inside source list NAT-ACL interface GigabitEthernet1 overload
+## csr1000v-1(config)# end
+## Note: in this example GigabitEthernet1 is the interface leading to the default gateway.
+## Everything is now ready to enable the Guest Shell.
+
+# Enabling Guest Shell
+
+## To enable the Guest Shell, use the following command from the privileged EXEC mode:
+
+## csr1000v-1#guestshell enable
+
+## The output in the terminal should look like this:
+
+## Interface will be selected if configured in app-hosting
+## Please wait for completion
+## guestshell installed successfully
+## Current state is: DEPLOYED
+## guestshell activated successfully
+## Current state is: ACTIVATED
+## guestshell started successfully
+## Current state is: RUNNING
+## Guestshell enabled successfully
+## Note: it may take several minutes for the command to execute.
+## The Guest Shell is now enabled.
+
+# Guest Shell verification
+
+## To verify the status of the Guest Shell, use the following command:
+
+## csr1000v-1-1#show app-hosting detail
+## App id                 : guestshell
+## Owner                  : iox
+## State                  : RUNNING
+## Application
+##   Type                 : lxc
+##   Name                 : GuestShell
+##   Version              : 3.1.0
+##   Description          : Cisco Systems Guest Shell XE for x86_64
+##   Path                 : /guestshell/:guestshell.tar
+## Activated profile name : custom
+
+## Resource reservation
+##  Memory               : 256 MB
+##  Disk                 : 1 MB
+##  CPU                  : 800 units
+##  VCPU                 : 1
+
+## Attached devices
+##   Type              Name               Alias
+##   ---------------------------------------------
+##   serial/shell     iox_console_shell   serial0
+##   serial/aux       iox_console_aux     serial1
+##   serial/syslog    iox_syslog          serial2
+##   serial/trace     iox_trace           serial3
+
+## Network interfaces
+## ---------------------------------------
+## eth0:    
+##   MAC address         : 52:54:dd:58:ef:be
+##   IPv4 address        : 192.168.1.2
+##   Network name        : VPG0
+
+## Port forwarding
+##  Table-entry  Service  Source-port  Destination-port
+##  ---------------------------------------------------
+## The state should be RUNNING.
