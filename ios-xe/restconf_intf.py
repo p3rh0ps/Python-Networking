@@ -31,6 +31,13 @@ parser.add_argument(
         help='TCP PORT Range default 443',
         default="443")
 parser.add_argument(
+        '-MT',
+        '--method',
+        type=str,
+        help='RESTAPI Method to user on the object: Create "POST" or\
+        Change "PUT" or "PATCH"',
+        default="POST")
+parser.add_argument(
         '-v',
         '--verbose',
         action='store_true')
@@ -96,9 +103,9 @@ def get_intf() -> None:
                 intf_pri.append('None')
                 intf_ip4.append('None')
                 intf_mas.append('None')
-    print(tabulate([intf_typ, intf_num, intf_des, intf_enc, intf_vrf, intf_pri, intf_ip4, intf_mas]))
+    print(tabulate([intf_typ, intf_num, intf_des, intf_enc, intf_vrf, intf_pri, intf_ip4, intf_mas], tablefmt="github", numalign="right"))
 
-def conf_intf(intf_typ:str,intf_num:str,intf_desc:str,intf_ipv4:str,intf_mask:str) -> str:
+def conf_intf(method: str, intf_typ:str,intf_num:str,intf_desc:str,intf_ipv4:str,intf_mask:str) -> int:
     """ Configure an interface on IOS-XE Router with restconf
     """
     payload = {
@@ -117,9 +124,12 @@ def conf_intf(intf_typ:str,intf_num:str,intf_desc:str,intf_ipv4:str,intf_mask:st
               }
             ]
     }
-    url = f'{REST_PROTO}://{HOST}:{REST_PORT}{RESOURCE}'
-    response = requests.post(url,auth=(USERNAME,PASSWORD), headers=headers, json=payload, verify=False)
-    print(response.request)
+    if method.upper() == "POST":
+        url = f'{REST_PROTO}://{HOST}:{REST_PORT}{RESOURCE}'
+    if method.upper() == "PUT" or method.upper() == "PATCH":
+        url = f'{REST_PROTO}://{HOST}:{REST_PORT}{RESOURCE}/{intf_typ}={intf_num}'
+
+    response = requests.request(method, url, auth=(USERNAME,PASSWORD), headers=headers, json=payload, verify=False)
     response.raise_for_status()
     return response.status_code
 
@@ -128,8 +138,7 @@ if __name__ == "__main__":
     try:
         print("*"*10,"Snapshot before Changes","*"*10)
         get_intf()
-        conf_intf('Loopback','1','Test2 Loopback','55.66.66.66','255.255.255.255')
-        print("*"*10,"Changes Applied","*"*10)
+        change_code_result = conf_intf(args.method,'Loopback','1','Test2 Loopback','66.1.2.3','255.255.255.255')
     except Exception as err:
         if str(requests.status_codes.codes.BAD_REQUEST) in str(err):
             print("There is an issue with your request, please review the request: method, payload...")
@@ -140,6 +149,10 @@ if __name__ == "__main__":
         if str(requests.status_codes.codes.CONFLICT) in str(err):
             print("Your object already exist, please update it with a PATCH request")
             sys.exit(-1)
+        print(str(err))
     print("*"*10,"Snapshot After Changes","*"*10)
     get_intf()
-    print("Interface has been created or updated !")
+    if change_code_result == 204:
+        print("Interface updated via PUT or PATCH request!")
+    if change_code_result == 200:
+        print("Interface created via POST request!")
