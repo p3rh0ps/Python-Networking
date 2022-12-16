@@ -51,7 +51,8 @@ USERNAME = input('Please enter a username:\n')
 PASSWORD = getpass('Please enter a password:\n')
 
 if args.verbose:
-    logging.basicConfig(level=logging.WARNING, filename='restconf-intf.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+    logging.basicConfig(level=logging.WARNING, filename='restconf-intf.log',\
+    filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 headers = {
     "Content-Type":"application/yang-data+json",
@@ -63,7 +64,8 @@ def get_intf() -> None:
     """
     payload = { }
     url = f'{REST_PROTO}://{HOST}:{REST_PORT}{RESOURCE}'
-    response = requests.get(url,auth=(USERNAME,PASSWORD), headers=headers, json=payload, verify=False)
+    response = requests.get(url,auth=(USERNAME,PASSWORD), headers=headers,\
+    json=payload, verify=False, timeout=5)
     response.raise_for_status()
     intf_typ = ["Interface Type:"]
     intf_num = ["Interface Number:"]
@@ -103,7 +105,7 @@ def get_intf() -> None:
                 intf_pri.append('None')
                 intf_ip4.append('None')
                 intf_mas.append('None')
-    print(tabulate([intf_typ, intf_num, intf_des, intf_enc, intf_vrf, intf_pri, intf_ip4, intf_mas], tablefmt="github", numalign="right"))
+    logging.warning(tabulate([intf_typ, intf_num, intf_des, intf_enc, intf_vrf, intf_pri, intf_ip4, intf_mas], tablefmt="github", numalign="right"))
 
 def conf_intf(method: str, intf_typ:str,intf_num:str,intf_desc:str,intf_ipv4:str,intf_mask:str) -> int:
     """ Configure an interface on IOS-XE Router with restconf
@@ -149,7 +151,7 @@ if __name__ == "__main__":
         if str(requests.status_codes.codes.CONFLICT) in str(err):
             print("Your object already exist, please update it with a PATCH request")
             sys.exit(-1)
-        print(str(err))
+        logging.warning(str(err))
     print("*"*10,"Snapshot After Changes","*"*10)
     get_intf()
     if change_code_result == 204:
