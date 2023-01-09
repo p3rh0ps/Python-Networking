@@ -22,3 +22,24 @@ curl -k -X PUT -i --header 'Accept: application/xml' \
 --header 'Content-Type:application/xml' \
 -u ers:MySuperPassword \
 -d data.xml https://64.103.46.211:443/ers/config/authorizationprofile/984b81c0-8c01-11e6-996c-525400b48521
+
+
+""""""
+IOS-XE
+""""""
+
+# Get interfaces range configuration Example from GiEth1 to GiEther4
+
+curl -k -u "admin:passwd" -X GET "https://csr1kv/restconf/data/Cisco-IOS-XE-native:native/interface/GigabitEthernet=[1-4]"
+
+# Modify interface configuration
+
+curl -k -u "admin:passwd" -H "Accept:application/yang-data+json" -H "Content-Type:application/yang-data+json" -X POST --data @conf-ip "https://csr1kv/restconf/dat
+a/Cisco-IOS-XE-native:native/interface/GigabitEthernet=2/ip/address/primary"
+
+> conf-ip file example
+  
+  {
+      "address": "12.12.12.12",
+      "mask": "255.255.255.0"
+  }
