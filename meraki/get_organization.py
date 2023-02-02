@@ -1,6 +1,5 @@
 import requests
 
-#token = '6bec40cf957de430a6f1f2baa056b99a4fac9ea0'
 token = 'fd6dd87d96915f21bc0e0b3d96a866ff0e53e381'
 
 headers = {
@@ -10,11 +9,13 @@ headers = {
 }
 
 # MERAKI BASE URL
-base_url = "https://api.meraki.com/api/v0"
+base_url = "https://api.meraki.com/api/v1"
 
 def get_organizations():
     orgs_url = '/organizations'
     response = requests.get(base_url + orgs_url, headers=headers)
+    print(response.json())
+    print(response.headers)
     for idx in range(0, len(response.json())):
         print(response.json()[idx]['id'])
 
