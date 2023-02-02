@@ -1,0 +1,48 @@
+---
+testbed:
+  name: NXOS Validation Process
+  alias: Validation
+  credentials:
+    default:
+      username: admin
+      password: secret
+devices:
+  pyats-1:
+    alias: n9kv-s1
+    type: switch
+    os: nxos
+    platform: n9k
+    connections:
+      ssh:
+        protocol: ssh
+        ip: 172.16.160.159
+      # rest:
+      #   class: rest.connector.Rest
+      #   protocol: https
+      #   ip: 172.16.160.159
+  pyats-2:
+    alias: n9kv-s2
+    type: switch
+    os: nxos
+    platform: n9k
+    connections:
+      ssh:
+        protocol: ssh
+        ip: 172.16.160.160
+      # rest:
+      #   class: rest.connector.Rest
+      #   protocol: https
+      #   ip: 172.16.160.160
+  pyats-3:
+    alias: n9kv-s3
+    type: switch
+    os: nxos
+    platform: n9k
+    connections:
+      ssh:
+        protocol: ssh
+        ip: 172.16.160.161
+      # rest:
+      #   class: rest.connector.Rest
+      #   protocol: https
+      #   ip: 172.16.160.161
