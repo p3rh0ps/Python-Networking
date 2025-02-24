@@ -308,7 +308,8 @@ for tst_dev in tb.devices:
                 flu.write("Transceiver Type: {}\n".format(parsed_data[intfs]['transceiver_type']))
                 flu.write("Transceiver Name: {}\n".format(parsed_data[intfs]['name']))
                 flu.write("Transceiver S/N: {}\n".format(parsed_data[intfs]['serial_number']))
-                flu.write("Transceiver Revision: {}\n".format(parsed_data[intfs]['revision']))
+                if 'revision' in parsed_data[intfs]:
+                    flu.write("Transceiver Revision: {}\n".format(parsed_data[intfs]['revision']))
                 flu.write("Transceiver P/N: {}\n".format(parsed_data[intfs]['part_number']))
                 flu.write("Transceiver Vendor OUI: {}\n".format(parsed_data[intfs]['vendor_oui']))
         flu.write("******************************************************\n")
